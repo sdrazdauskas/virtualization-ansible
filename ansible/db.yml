@@ -1,6 +1,6 @@
 ---
-- name: Install MySQL Server and Set Up Database
-  hosts: all
+- name: Install MySQL server and set up the database
+  hosts: database_server
   become: yes
 
   vars:
