@@ -8,6 +8,20 @@
     sql_remote_path: "/tmp/db-data.sql"
 
   tasks:
+    - name: Ensure apt lists directory exists # Sometimes failed to get lock
+      file:
+        path: /var/lib/apt/lists
+        state: directory
+        mode: '0755'
+
+    - name: Reset apt cache
+      shell: |
+        rm -rf /var/lib/apt/lists/*
+        apt-get clean
+        apt-get update
+      args:
+        executable: /bin/bash
+
     - name: Update apt repository cache
       apt:
         update_cache: yes
@@ -35,7 +49,7 @@
       args:
         executable: /bin/bash
 
-    - name: Clean up SQL file from the target system (optional)
+    - name: Clean up SQL file from the target system
       file:
         path: "{{ sql_remote_path }}"
         state: absent
