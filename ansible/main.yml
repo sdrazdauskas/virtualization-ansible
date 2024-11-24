@@ -1,0 +1,9 @@
+---
+- name: Configure database
+  import_playbook: db.yml
+  
+- name: Configure web server
+  import_playbook: web.yml
+  
+- name: Configure client
+  import_playbook: client.yml

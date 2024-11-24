@@ -1,0 +1,41 @@
+---
+- name: Install MySQL Server and Set Up Database
+  hosts: all
+  become: yes
+
+  vars:
+    sql_local_path: "db-data.sql"  # Path to the SQL file on the control node
+    sql_remote_path: "/tmp/db-data.sql"
+
+  tasks:
+    - name: Update apt repository cache
+      apt:
+        update_cache: yes
+
+    - name: Install MySQL server
+      apt:
+        name: mysql-server
+        state: present
+
+    - name: Ensure MySQL service is running
+      service:
+        name: mysql
+        state: started
+        enabled: true
+
+    - name: Copy SQL file to the managed node
+      copy:
+        src: "{{ sql_local_path }}"
+        dest: "{{ sql_remote_path }}"
+        mode: '0644'
+
+    - name: Load database schema and data from SQL file
+      shell: |
+        mysql -u root < {{ sql_remote_path }}
+      args:
+        executable: /bin/bash
+
+    - name: Clean up SQL file from the target system (optional)
+      file:
+        path: "{{ sql_remote_path }}"
+        state: absent
