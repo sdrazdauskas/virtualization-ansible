@@ -10,7 +10,8 @@ CLIENT_VM_NAME="client-server"
 
 CENDPOINT=https://grid5.mif.vu.lt/cloud3/RPC2
 
-ANSIBLE_HOSTS_FILE="hosts"
+ANSIBLE_HOSTS_FILE="./ansible/inventory/hosts" 
+mkdir -p "$(dirname "$ANSIBLE_HOSTS_FILE")" # Create the directory if needed
 
 # Install required components
 echo "Installing required components..."
@@ -62,7 +63,7 @@ configure_vm() {
 
   # Instantiate VM with the specified template
   CVMREZ=$(onetemplate instantiate "ubuntu-24.04" --name "$VM_NAME" --user $CUSER --password $CPASS --endpoint $CENDPOINT)
-  # Check if something went wrong, in case it did it automatically prints why
+  # Check if something went wrong, it automatically prints why
   if [ -z "$CVMREZ" ]; then 
     continue
   fi
