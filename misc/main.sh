@@ -4,12 +4,12 @@
 DB_USER="sadr0144"
 WEBSERVER_USER="sadr0144"
 CLIENT_USER="sadr0144"
-DB_VM_NAME="database-server"
-WEBSERVER_VM_NAME="web-server"
-CLIENT_VM_NAME="client-server"
+DB_VM_NAME="database_server"
+WEBSERVER_VM_NAME="web_server"
+CLIENT_VM_NAME="client_server"
 
 CENDPOINT=https://grid5.mif.vu.lt/cloud3/RPC2
-
+RETRY_SLEEP=10
 ANSIBLE_HOSTS_FILE="../ansible/inventory/hosts" 
 mkdir -p "$(dirname "$ANSIBLE_HOSTS_FILE")" # Create the directory if needed
 
@@ -19,7 +19,7 @@ sudo apt-get update
 sudo apt-get -y install gnupg wget apt-transport-https
 sudo apt install -y software-properties-common
 sudo add-apt-repository --yes --update ppa:ansible/ansible
-sudo apt install -y
+sudo apt install -y ansible-core
 
 # Create the keyrings directory if it doesn't exist
 sudo mkdir -p /etc/apt/keyrings
@@ -69,7 +69,7 @@ configure_vm() {
   fi
 
   echo $CVMREZ
-    CVMID=$(echo $CVMREZ |cut -d ' ' -f 3) 
+    CVMID=$(echo $CVMREZ | cut -d ' ' -f 3) 
     # Check if CVMID is a number using regular expression
     if ! echo "$CVMID" | grep -qE '^[0-9]+$'; then
       echo "Failed to create a VM machine"
@@ -82,12 +82,12 @@ configure_vm() {
   echo "Waiting for VM to RUN..."
   while true; do
     $(onevm show $CVMID --user $CUSER --password $CPASS --endpoint $CENDPOINT >$CVMID.txt)
-    CSSH_PRIP=$(cat $CVMID.txt | grep PRIVATE\_IP| cut -d '=' -f 2 | tr -d '"')
+    CSSH_PRIP=$(cat $CVMID.txt | grep PRIVATE\_IP | cut -d '=' -f 2 | tr -d '"')
     if [ -n "$CSSH_PRIP" ]; then
       break
     fi
     echo "Retrying connection..."
-    sleep 5
+    sleep $RETRY_SLEEP
   done
 
   CSSH_CON="ssh $CUSER@$CSSH_PRIP"
@@ -99,7 +99,7 @@ configure_vm() {
   while true; do
     ssh-copy-id -o StrictHostKeyChecking=no -f $CUSER@$CSSH_PRIP && break
     echo "Retrying ssh-copy-id..."
-    sleep 5
+    sleep $RETRY_SLEEP
   done
 
   # Append VM name and private IP to Ansible hosts file
