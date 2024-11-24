@@ -16,6 +16,9 @@ ANSIBLE_HOSTS_FILE="hosts"
 echo "Installing required components..."
 sudo apt-get update
 sudo apt-get -y install gnupg wget apt-transport-https
+sudo apt install -y software-properties-common
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+sudo apt install -y
 
 # Create the keyrings directory if it doesn't exist
 sudo mkdir -p /etc/apt/keyrings
