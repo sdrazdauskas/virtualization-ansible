@@ -10,7 +10,7 @@ CLIENT_VM_NAME="client-server"
 
 CENDPOINT=https://grid5.mif.vu.lt/cloud3/RPC2
 
-ANSIBLE_HOSTS_FILE="./ansible/inventory/hosts" 
+ANSIBLE_HOSTS_FILE="../ansible/inventory/hosts" 
 mkdir -p "$(dirname "$ANSIBLE_HOSTS_FILE")" # Create the directory if needed
 
 # Install required components
@@ -70,14 +70,11 @@ configure_vm() {
 
   echo $CVMREZ
     CVMID=$(echo $CVMREZ |cut -d ' ' -f 3) 
-
     # Check if CVMID is a number using regular expression
     if ! echo "$CVMID" | grep -qE '^[0-9]+$'; then
-    echo "Failed to create a VM machine"
-    exit 1
+      echo "Failed to create a VM machine"
+      exit 1
     fi
-
-    echo $CVMID
     break
   done
 
