@@ -139,4 +139,4 @@ configure_vm $CLIENT_USER $CLIENT_VM_NAME
 
 sudo ansible-vault encrypt $VAULT_FILE
 sudo chmod 644 $VAULT_FILE
-ansible-playbook ../ansible/main.yml --ask-vault-pass
+ansible-playbook -i ../ansible/inventory/hosts ../ansible/main.yml --ask-vault-pass
