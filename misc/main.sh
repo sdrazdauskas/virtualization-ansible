@@ -120,7 +120,7 @@ configure_vm() {
 }
 
 # Initialize the vault file
-echo "---" > $VAULT_FILE
+echo "---" | sudo tee $VAULT_FILE
 
 # Call the function with the username and VM name parameters
 configure_vm $DB_USER $DB_VM_NAME
