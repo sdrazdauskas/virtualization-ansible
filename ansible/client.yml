@@ -4,6 +4,11 @@
   become: yes
 
   tasks:
+    - name: Gnupg is installation
+      apt: 
+        name: gnupg
+        state: present
+
     - name: Add Google Chrome repository key
       apt_key:
         url: https://dl.google.com/linux/linux_signing_key.pub

@@ -30,6 +30,7 @@
         mysql -u root < {{ sql_remote_path }}
       args:
         executable: /bin/bash
+      ignore_errors: yes
 
     - name: Clean up SQL file from the target system
       file:
