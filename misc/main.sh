@@ -139,3 +139,4 @@ configure_vm $WEBSERVER_USER $WEBSERVER_VM_NAME
 configure_vm $CLIENT_USER $CLIENT_VM_NAME
 
 sudo ansible-vault encrypt $VAULT_FILE
+ansible-playbook ../ansible/main.yml --ask-vault-pass
