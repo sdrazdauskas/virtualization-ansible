@@ -2,8 +2,25 @@
 - name: Install chrome
   hosts: client_server
   become: yes
+  become_pass: "{{ update_become_pass }}"
+  vars_files: 
+    - ../misc/vault.yml
 
   tasks:
+    - name: Ensure apt lists directory exists # Fails due lock if it doesn't exist
+      file:
+        path: /var/lib/apt/lists
+        state: directory
+        mode: '0755'
+
+    - name: Update apt repository cache
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages 
+      apt: 
+        upgrade: dist
+
     - name: Gnupg installation
       apt: 
         name: gnupg

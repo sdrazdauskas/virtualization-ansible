@@ -2,12 +2,29 @@
 - name: Install MySQL server and set up the database
   hosts: database_server
   become: yes
+  become_pass: "{{ update_become_pass }}"
+  vars_files: 
+    - ../misc/vault.yml
 
   vars:
     sql_local_path: "db-data.sql"  # Path to the SQL file on the control node
     sql_remote_path: "/tmp/db-data.sql"
 
   tasks:
+    - name: Ensure apt lists directory exists # Fails due lock if it doesn't exist
+      file:
+        path: /var/lib/apt/lists
+        state: directory
+        mode: '0755'
+
+    - name: Update apt repository cache
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages 
+      apt: 
+        upgrade: dist
+
     - name: Install MySQL server
       apt:
         name: mysql-server
