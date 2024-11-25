@@ -10,7 +10,7 @@ CLIENT_VM_NAME="client_server"
 
 CENDPOINT=https://grid5.mif.vu.lt/cloud3/RPC2
 RETRY_SLEEP=10
-ANSIBLE_HOSTS_FILE="../ansible/inventory/hosts" 
+ANSIBLE_HOSTS_FILE="../ansible/inventory/hosts"
 VAULT_FILE="../misc/vault.yml"
 mkdir -p "$(dirname "$ANSIBLE_HOSTS_FILE")" # Create the directory if needed
 mkdir -p "$(dirname "$VAULT_FILE")" # Create the vault directory if needed
@@ -131,6 +131,7 @@ configure_vm() {
 
 # Initialize the vault file
 echo "---" | sudo tee $VAULT_FILE
+sudo chmod 644 $VAULT_FILE
 
 # Call the function with the username and VM name parameters
 configure_vm $DB_USER $DB_VM_NAME
