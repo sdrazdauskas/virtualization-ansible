@@ -6,6 +6,7 @@
     - ../misc/vault.yml
   vars:
     ansible_become_pass: "{{ client_server_pass }}"
+    ansible_user: sadr0144
 
   tasks:
     - name: Ensure apt lists directory exists # Fails due lock if it doesn't exist
