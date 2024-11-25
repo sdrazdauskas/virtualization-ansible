@@ -131,7 +131,6 @@ configure_vm() {
 
 # Initialize the vault file
 echo "---" | sudo tee $VAULT_FILE
-sudo chmod 644 $VAULT_FILE
 
 # Call the function with the username and VM name parameters
 configure_vm $DB_USER $DB_VM_NAME
@@ -139,4 +138,5 @@ configure_vm $WEBSERVER_USER $WEBSERVER_VM_NAME
 configure_vm $CLIENT_USER $CLIENT_VM_NAME
 
 sudo ansible-vault encrypt $VAULT_FILE
+sudo chmod 644 $VAULT_FILE
 ansible-playbook ../ansible/main.yml --ask-vault-pass
