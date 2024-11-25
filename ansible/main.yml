@@ -1,4 +1,7 @@
 ---
+- name: Update VMs
+  import_playbook: update.yml
+
 - name: Configure database
   import_playbook: db.yml
   

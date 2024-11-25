@@ -1,0 +1,19 @@
+---
+- name: Update all VMs
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Ensure apt lists directory exists # Sometimes failed to get lock so have force this
+      file:
+        path: /var/lib/apt/lists
+        state: directory
+        mode: '0755'
+
+    - name: Update apt repository cache
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages 
+      apt: 
+        upgrade: dist
