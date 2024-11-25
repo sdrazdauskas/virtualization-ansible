@@ -11,7 +11,9 @@ CLIENT_VM_NAME="client_server"
 CENDPOINT=https://grid5.mif.vu.lt/cloud3/RPC2
 RETRY_SLEEP=10
 ANSIBLE_HOSTS_FILE="../ansible/inventory/hosts" 
+VAULT_FILE="$VAULT_DIR/vault.yml"
 mkdir -p "$(dirname "$ANSIBLE_HOSTS_FILE")" # Create the directory if needed
+mkdir -p "$(dirname "$VAULT_FILE")" # Create the vault directory if needed
 
 # Install required components
 echo "Installing required components..."
@@ -54,21 +56,21 @@ configure_vm() {
   local VM_NAME=$2
 
   while true; do
-  # Prompt for VU MIF cloud infrastructure password
-  echo "Please enter the password for user $CUSER:"
-  stty -echo
-  read CPASS
-  stty echo
-  echo
+    # Prompt for VU MIF cloud infrastructure password
+    echo "Please enter the password for user $CUSER:"
+    stty -echo
+    read CPASS
+    stty echo
+    echo
 
-  # Instantiate VM with the specified template
-  CVMREZ=$(onetemplate instantiate "ubuntu-24.04" --name "$VM_NAME" --user $CUSER --password $CPASS --endpoint $CENDPOINT)
-  # Check if something went wrong, it automatically prints why
-  if [ -z "$CVMREZ" ]; then 
-    continue
-  fi
+    # Instantiate VM with the specified template
+    CVMREZ=$(onetemplate instantiate "ubuntu-24.04" --name "$VM_NAME" --user $CUSER --password $CPASS --endpoint $CENDPOINT)
+    # Check if something went wrong, it automatically prints why
+    if [ -z "$CVMREZ" ]; then 
+      continue
+    fi
 
-  echo $CVMREZ
+    echo $CVMREZ
     CVMID=$(echo $CVMREZ | cut -d ' ' -f 3) 
     # Check if CVMID is a number using regular expression
     if ! echo "$CVMID" | grep -qE '^[0-9]+$'; then
@@ -95,9 +97,17 @@ configure_vm() {
   # Remove the connection from known hosts
   ssh-keygen -R $CSSH_PRIP
 
+  # Prompt for the password to store in the vault
+  echo "Please enter the password for ssh-copy-id, it will be stored in the vault for later:"
+  stty -echo
+  read SSH_PASSWORD
+  stty echo
+  echo
+  echo "${VM_NAME}_pass: $SSH_PASSWORD" >> $VAULT_FILE
+
   # Retry ssh-copy-id until it works, forcing the addition of the key and skipping host key checking
   while true; do
-    ssh-copy-id -o StrictHostKeyChecking=no -f $CUSER@$CSSH_PRIP && break
+    sshpass -p "$SSH_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -f $CUSER@$CSSH_PRIP && break
     echo "Retrying ssh-copy-id..."
     sleep $RETRY_SLEEP
   done
@@ -109,7 +119,13 @@ configure_vm() {
   echo
 }
 
+# Initialize the vault file
+echo "---" > $VAULT_FILE
+
 # Call the function with the username and VM name parameters
 configure_vm $DB_USER $DB_VM_NAME
 configure_vm $WEBSERVER_USER $WEBSERVER_VM_NAME
 configure_vm $CLIENT_USER $CLIENT_VM_NAME
+
+# Encrypt the vault file
+ansible-vault encrypt $VAULT_FILE

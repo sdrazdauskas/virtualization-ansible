@@ -4,7 +4,7 @@
   become: yes
 
   tasks:
-    - name: Ensure apt lists directory exists # Sometimes failed to get lock so have force this
+    - name: Ensure apt lists directory exists # Fails due lock if it doesn't exist
       file:
         path: /var/lib/apt/lists
         state: directory
