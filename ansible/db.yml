@@ -2,9 +2,10 @@
 - name: Install MySQL server and set up the database
   hosts: database_server
   become: yes
-  become_pass: "{{ update_become_pass }}"
   vars_files: 
     - ../misc/vault.yml
+  vars:
+    ansible_become_pass: "{{ database_server_pass }}"
 
   vars:
     sql_local_path: "db-data.sql"  # Path to the SQL file on the control node
