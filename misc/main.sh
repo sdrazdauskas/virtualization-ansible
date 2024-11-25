@@ -11,7 +11,7 @@ CLIENT_VM_NAME="client_server"
 CENDPOINT=https://grid5.mif.vu.lt/cloud3/RPC2
 RETRY_SLEEP=10
 ANSIBLE_HOSTS_FILE="../ansible/inventory/hosts" 
-VAULT_FILE="$VAULT_DIR/vault.yml"
+VAULT_FILE="../misc/vault.yml"
 mkdir -p "$(dirname "$ANSIBLE_HOSTS_FILE")" # Create the directory if needed
 mkdir -p "$(dirname "$VAULT_FILE")" # Create the vault directory if needed
 
@@ -57,7 +57,7 @@ configure_vm() {
 
   while true; do
     # Prompt for VU MIF cloud infrastructure password
-    echo "Please enter the password for user $CUSER:"
+    echo "Please enter VU MIF cloud password for $CUSER:"
     stty -echo
     read CPASS
     stty echo
@@ -103,19 +103,29 @@ configure_vm() {
   read SSH_PASSWORD
   stty echo
   echo
-  echo "${VM_NAME}_pass: $SSH_PASSWORD" >> $VAULT_FILE
 
-  # Retry ssh-copy-id until it works, forcing the addition of the key and skipping host key checking
   while true; do
-    sshpass -p "$SSH_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -f $CUSER@$CSSH_PRIP && break
-    echo "Retrying ssh-copy-id..."
-    sleep $RETRY_SLEEP
+    sshpass -p "$SSH_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -f $CUSER@$CSSH_PRIP
+    if [ $? -eq 0 ]; then
+      echo "${VM_NAME}_pass: $SSH_PASSWORD" | sudo tee -a $VAULT_FILE > /dev/null
+      break
+    elif [ $? -eq 1 ]; then
+      echo "Please enter the password for ssh-copy-id:"
+      stty -echo
+      read SSH_PASSWORD
+      stty echo
+      echo
+      continue
+    else
+      echo "Connection error. Retrying..."
+      sleep $RETRY_SLEEP
+    fi
   done
 
   # Append VM name and private IP to Ansible hosts file
   echo "[$VM_NAME]" | sudo tee -a $ANSIBLE_HOSTS_FILE
   echo "$CSSH_PRIP" | sudo tee -a $ANSIBLE_HOSTS_FILE
-  echo "" >> $ANSIBLE_HOSTS_FILE
+  echo ""           | sudo tee -a $ANSIBLE_HOSTS_FILE
   echo
 }
 
@@ -127,5 +137,4 @@ configure_vm $DB_USER $DB_VM_NAME
 configure_vm $WEBSERVER_USER $WEBSERVER_VM_NAME
 configure_vm $CLIENT_USER $CLIENT_VM_NAME
 
-# Encrypt the vault file
-ansible-vault encrypt $VAULT_FILE
+sudo ansible-vault encrypt $VAULT_FILE
