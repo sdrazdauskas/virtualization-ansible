@@ -27,7 +27,9 @@
 
     - name: Install MySQL server
       apt:
-        name: mysql-server
+        name: 
+          - mysql-server
+          - python3-pymysql
         state: present
 
     - name: Ensure MySQL service is running
@@ -35,6 +37,26 @@
         name: mysql
         state: started
         enabled: true
+        
+    - name: Set root password 
+      mysql_user:
+        name: root 
+        password: "{{ database_server_pass }}" 
+        priv: '*.*:ALL' 
+        state: present
+
+    - name: Create /root/.my.cnf file from template 
+      template:
+        src: ../misc/mysql-root.ini.j2
+        dest: /root/.my.cnf
+        owner: root 
+        group: root 
+        mode: '0600'
+
+    - name: Restart MySQL
+      service:
+        name: mysql
+        state: restarted
 
     - name: Copy SQL file to the managed node
       copy:
@@ -49,18 +71,13 @@
         executable: /bin/bash
       ignore_errors: yes
 
-    - name: Install python3-pymysql
-      apt:
-        name: python3-pymysql
-        state: present
-
     - name: Create MySQL user 
       mysql_user:
         name: webuser 
         password: "{{ db_web_pass }}" 
-        priv: '*.*:ALL' 
+        priv: 'hospital_db.*:ALL' 
         state: present
-        login_user: root 
+        login_user: root
         login_password: "{{ database_server_pass }}"
 
     - name: Allow port 3306

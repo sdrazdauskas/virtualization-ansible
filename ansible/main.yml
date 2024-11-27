@@ -2,6 +2,10 @@
 - name: Configure database
   import_playbook: db.yml
   become: yes
+
+- name: Configure website
+  import_playbook: web.yml
+  become: yes
   
 - name: Configure client
   import_playbook: client.yml
