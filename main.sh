@@ -64,7 +64,7 @@ configure_vm() {
     echo
 
     # Instantiate VM with the specified template
-    CVMREZ=$(onetemplate instantiate "ubuntu-24.04" --name "$VM_NAME" --user $CUSER --password $CPASS --endpoint $CENDPOINT)
+    CVMREZ=$(onetemplate instantiate "ubuntu-24.04" --name "$VM_NAME" --user $CUSER --password $CPASS --endpoint $CENDPOINT --raw "TCP_PORT_FORWARDING=[PORT=22,PORT=80,PORT=443]")
     # Check if something went wrong, it automatically prints why
     if [ -z "$CVMREZ" ]; then 
       continue
@@ -99,6 +99,7 @@ configure_vm() {
 
   # Extract the password from connection info
   SSH_PASSWORD=$(grep 'ROOT_PASSWORD' $CVMID.txt | cut -d '=' -f 2 | tr -d '"')
+  echo $SSH_PASSWORD
   while true; do
     sshpass -p "$SSH_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -f $CUSER@$CSSH_PRIP
     if [ $? -eq 0 ]; then
