@@ -49,14 +49,9 @@
         executable: /bin/bash
       ignore_errors: yes
 
-    - name: Ensure pip3 is installed 
-      apt: 
-        name: python3-pip 
-        state: present
-
-    - name: Install PyMySQL 
-      pip: 
-        name: PyMySQL 
+    - name: Install python3-pymysql
+      apt:
+        name: python3-pymysql
         state: present
 
     - name: Create MySQL user 
@@ -66,10 +61,11 @@
         priv: '*.*:ALL' 
         state: present
 
-    - name: Allow access to port 80
-      community.general.ufw:
-        rule: allow
-        port: '3306'
+    - name: Allow port 3306
+      ansible.builtin.command: 
+        cmd: sudo ufw allow 3306 
+      notify: 
+      - Reload UFW
 
     - name: Clean up SQL file from the target system
       file:
