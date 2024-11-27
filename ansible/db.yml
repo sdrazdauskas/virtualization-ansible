@@ -6,7 +6,7 @@
     - ../misc/vault.yml
   vars:
     ansible_become_pass: "{{ database_server_pass }}"
-    sql_local_path: "db-data.sql"  # Path to the SQL file on the control node
+    sql_local_path: "../misc/db-data.sql"  # Path to the SQL file on the control node
     sql_remote_path: "/tmp/db-data.sql"
 
   tasks:

@@ -10,8 +10,8 @@ CLIENT_VM_NAME="client_server"
 
 CENDPOINT=https://grid5.mif.vu.lt/cloud3/RPC2
 RETRY_SLEEP=10
-ANSIBLE_HOSTS_FILE="../ansible/inventory/hosts"
-VAULT_FILE="../misc/vault.yml"
+ANSIBLE_HOSTS_FILE="ansible/inventory/hosts"
+VAULT_FILE="misc/vault.yml"
 mkdir -p "$(dirname "$ANSIBLE_HOSTS_FILE")" # Create the directory if needed
 mkdir -p "$(dirname "$VAULT_FILE")" # Create the vault directory if needed
 
@@ -139,4 +139,4 @@ configure_vm $CLIENT_USER $CLIENT_VM_NAME
 
 sudo ansible-vault encrypt $VAULT_FILE
 sudo chmod 644 $VAULT_FILE
-ansible-playbook -i ../ansible/inventory/hosts ../ansible/main.yml --ask-vault-pass
+ansible-playbook -i ansible/inventory/hosts ansible/main.yml --ask-vault-pass
