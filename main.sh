@@ -50,6 +50,11 @@ fi
 echo "Please enter password for your SSH key:"
 ssh-add
 
+# Delete the existing host file, in case of running this multiple times to test
+if [ -f "$ANSIBLE_HOSTS_FILE" ]; then
+  rm -f "$ANSIBLE_HOSTS_FILE";
+fi
+
 # Function to instantiate VM and configure SSH
 configure_vm() {
   local CUSER=$1
