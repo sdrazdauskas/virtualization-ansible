@@ -8,6 +8,7 @@
     ansible_become_pass: "{{ database_server_pass }}"
     sql_local_path: "../misc/db-data.sql"  # Path to the SQL file on the control node
     sql_remote_path: "/tmp/db-data.sql"
+    ansible_python_interpreter: /usr/bin/python3
 
   tasks:
     - name: Ensure apt lists directory exists # Fails due lock if it doesn't exist
@@ -47,6 +48,16 @@
       args:
         executable: /bin/bash
       ignore_errors: yes
+
+    - name: Ensure pip3 is installed 
+      apt: 
+        name: python3-pip 
+        state: present
+
+    - name: Install PyMySQL 
+      pip: 
+        name: PyMySQL 
+        state: present
 
     - name: Create MySQL user 
       mysql_user:
