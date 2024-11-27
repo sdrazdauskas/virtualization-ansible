@@ -97,25 +97,13 @@ configure_vm() {
   # Remove the connection from known hosts
   ssh-keygen -R $CSSH_PRIP
 
-  # Prompt for the password to store in the vault
-  echo "Please enter the password for ssh-copy-id, it will be stored in the vault for later:"
-  stty -echo
-  read SSH_PASSWORD
-  stty echo
-  echo
-
+  # Extract the password from connection info
+  SSH_PASSWORD=$(grep 'ROOT_PASSWORD' $CVMID.txt | cut -d '=' -f 2 | tr -d '"')
   while true; do
     sshpass -p "$SSH_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -f $CUSER@$CSSH_PRIP
     if [ $? -eq 0 ]; then
       echo "${VM_NAME}_pass: $SSH_PASSWORD" | sudo tee -a $VAULT_FILE > /dev/null
       break
-    elif [ $? -eq 1 ]; then
-      echo "Please enter the password for ssh-copy-id:"
-      stty -echo
-      read SSH_PASSWORD
-      stty echo
-      echo
-      continue
     else
       echo "Connection error. Retrying..."
       sleep $RETRY_SLEEP
