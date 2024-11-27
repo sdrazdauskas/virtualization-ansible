@@ -98,7 +98,7 @@ configure_vm() {
   ssh-keygen -R $CSSH_PRIP
 
   # Extract the password from connection info
-  SSH_PASSWORD=$(grep 'ROOT_PASSWORD' $CVMID.txt | cut -d '=' -f 2 | tr -d '"')
+  SSH_PASSWORD=$(grep 'ROOT_PASSWORD' $CVMID.txt | cut -d '=' -f 2 | tr -d '"' | tr -d ',')
   echo $SSH_PASSWORD
   while true; do
     sshpass -p "$SSH_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -f $CUSER@$CSSH_PRIP
