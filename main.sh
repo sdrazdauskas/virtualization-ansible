@@ -54,6 +54,7 @@ ssh-add
 configure_vm() {
   local CUSER=$1
   local VM_NAME=$2
+  local RAW_ARG=$3
 
   while true; do
     # Prompt for VU MIF cloud infrastructure password
@@ -64,7 +65,12 @@ configure_vm() {
     echo
 
     # Instantiate VM with the specified template
-    CVMREZ=$(onetemplate instantiate "ubuntu-24.04" --name "$VM_NAME" --user $CUSER --password $CPASS --endpoint $CENDPOINT --raw "TCP_PORT_FORWARDING=\"22 80 43\"")
+    if [ -n "$RAW_ARG" ]; then
+      CVMREZ=$(onetemplate instantiate "ubuntu-24.04" --name "$VM_NAME" --user $CUSER --password $CPASS --endpoint $CENDPOINT --raw "$RAW_ARG")
+    else
+      CVMREZ=$(onetemplate instantiate "ubuntu-24.04" --name "$VM_NAME" --user $CUSER --password $CPASS --endpoint $CENDPOINT)
+    fi
+
     if [ -z "$CVMREZ" ]; then # Check if something went wrong, it automatically prints why
       continue 
     fi
@@ -121,7 +127,7 @@ echo "---" | sudo tee $VAULT_FILE
 
 # Call the function with the username and VM name parameters
 configure_vm $DB_USER $DB_VM_NAME
-configure_vm $WEBSERVER_USER $WEBSERVER_VM_NAME
+configure_vm $WEBSERVER_USER $WEBSERVER_VM_NAME "TCP_PORT_FORWARDING=\"22 80 5000\""
 configure_vm $CLIENT_USER $CLIENT_VM_NAME
 
 sudo ansible-vault encrypt $VAULT_FILE
