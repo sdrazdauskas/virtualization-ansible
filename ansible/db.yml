@@ -60,11 +60,13 @@
         password: "{{ db_web_pass }}" 
         priv: '*.*:ALL' 
         state: present
+        login_user: root 
+        login_password: "{{ database_server_pass }}"
 
     - name: Allow port 3306
       ansible.builtin.command: 
         cmd: sudo ufw allow 3306 
-      notify: 
+      notify:
       - Reload UFW
 
     - name: Clean up SQL file from the target system

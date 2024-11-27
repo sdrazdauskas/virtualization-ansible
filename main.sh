@@ -20,19 +20,18 @@ echo "Installing required components..."
 sudo apt-get update
 sudo apt-get -y install gnupg wget apt-transport-https
 sudo apt install -y software-properties-common
+
+# Ansible
 sudo add-apt-repository --yes --update ppa:ansible/ansible
 sudo apt install -y ansible-core
 ansible-galaxy collection install community.mysql
-ansible-galaxy collection install community.general
 
-# Create the keyrings directory if it doesn't exist
+# OpenNebula
 sudo mkdir -p /etc/apt/keyrings
-
 echo "Adding OpenNebula GPG key..."
 wget -q -O- https://downloads.opennebula.io/repo/repo2.key | sudo gpg --dearmor --yes --output /etc/apt/keyrings/opennebula.gpg
 echo "Adding OpenNebula repository..."
 echo "deb [signed-by=/etc/apt/keyrings/opennebula.gpg] https://downloads.opennebula.io/repo/6.10/Ubuntu/24.04/ stable opennebula" | sudo tee /etc/apt/sources.list.d/opennebula.list
-
 echo "Updating package list and installing OpenNebula tools..."
 sudo apt-get update
 sudo apt-get install -y opennebula-tools
@@ -140,6 +139,13 @@ configure_vm $CLIENT_USER $CLIENT_VM_NAME
 
 PASSWORD=$(openssl rand -base64 16 | head -c 16)
 echo "db_web_pass: $PASSWORD" | sudo tee -a $VAULT_FILE > /dev/null
-sudo ansible-vault encrypt $VAULT_FILE
+# Loop until the encryption is successful
+while true; do
+    sudo ansible-vault encrypt $VAULT_FILE
+    if [ $? -eq 0 ]; then
+        break
+    fi
+done
+
 sudo chmod 644 $VAULT_FILE
 ansible-playbook -i ansible/inventory/hosts ansible/main.yml --ask-vault-pass
