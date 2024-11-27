@@ -41,8 +41,8 @@
     - name: Set root password 
       mysql_user:
         name: root 
-        password: "{{ database_server_pass }}" 
-        priv: '*.*:ALL' 
+        password: "{{ database_server_pass }}"
+        login_unix_socket: /var/run/mysqld/mysqld.sock
         state: present
 
     - name: Create /root/.my.cnf file from template 
