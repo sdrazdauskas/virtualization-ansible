@@ -22,6 +22,7 @@ sudo apt-get -y install gnupg wget apt-transport-https
 sudo apt install -y software-properties-common
 sudo add-apt-repository --yes --update ppa:ansible/ansible
 sudo apt install -y ansible-core
+ansible-galaxy collection install community.mysql
 
 # Create the keyrings directory if it doesn't exist
 sudo mkdir -p /etc/apt/keyrings
@@ -136,6 +137,8 @@ configure_vm $DB_USER $DB_VM_NAME "TCP_PORT_FORWARDING=\"22 3306\""
 configure_vm $WEBSERVER_USER $WEBSERVER_VM_NAME "TCP_PORT_FORWARDING=\"22 80 5000\""
 configure_vm $CLIENT_USER $CLIENT_VM_NAME
 
+PASSWORD=$(openssl rand -base64 16 | head -c 16)
+echo "db_web_pass: $PASSWORD" | sudo tee -a $VAULT_FILE > /dev/null
 sudo ansible-vault encrypt $VAULT_FILE
 sudo chmod 644 $VAULT_FILE
 ansible-playbook -i ansible/inventory/hosts ansible/main.yml --ask-vault-pass

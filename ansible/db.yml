@@ -48,6 +48,13 @@
         executable: /bin/bash
       ignore_errors: yes
 
+    - name: Create MySQL user 
+      mysql_user: 
+        name: webuser 
+        password: "{{ db_web_pass }}" 
+        priv: '*.*:ALL' 
+        state: present  
+
     - name: Clean up SQL file from the target system
       file:
         path: "{{ sql_remote_path }}"
