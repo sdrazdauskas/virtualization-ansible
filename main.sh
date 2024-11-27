@@ -64,7 +64,7 @@ configure_vm() {
     stty echo
     echo
 
-    # Instantiate VM with the specified template
+    # Instantiate VM with the specified template and optional arguments
     if [ -n "$RAW_ARG" ]; then
       CVMREZ=$(onetemplate instantiate "ubuntu-24.04" --name "$VM_NAME" --user $CUSER --password $CPASS --endpoint $CENDPOINT --raw "$RAW_ARG")
     else
@@ -87,6 +87,7 @@ configure_vm() {
 
   # Wait for VM to run and retry connection until it works
   echo "Waiting for VM to RUN..."
+  sleep $RETRY_SLEEP
   while true; do
     $(onevm show $CVMID --user $CUSER --password $CPASS --endpoint $CENDPOINT >$CVMID.txt)
     CSSH_PRIP=$(cat $CVMID.txt | grep PRIVATE\_IP | cut -d '=' -f 2 | tr -d '"')
@@ -126,7 +127,7 @@ configure_vm() {
 echo "---" | sudo tee $VAULT_FILE
 
 # Call the function with the username and VM name parameters
-configure_vm $DB_USER $DB_VM_NAME
+configure_vm $DB_USER $DB_VM_NAME "TCP_PORT_FORWARDING=\"22 3306\""
 configure_vm $WEBSERVER_USER $WEBSERVER_VM_NAME "TCP_PORT_FORWARDING=\"22 80 5000\""
 configure_vm $CLIENT_USER $CLIENT_VM_NAME
 
