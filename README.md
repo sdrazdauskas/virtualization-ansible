@@ -8,4 +8,4 @@
 * Setup a ansible vault.
 * Run the ansible playbooks.
 * Setup database with mysql and create custom user for website
-* Install chrome on client VM
+* Install chrome on client VM and install rdp

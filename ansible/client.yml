@@ -27,6 +27,22 @@
         name: gnupg
         state: present
 
+    - name: Install xRDP
+      apt:
+        name: xrdp
+        state: present
+
+    - name: Start and enable xRDP service
+      systemd:
+        name: xrdp
+        state: started
+        enabled: yes
+
+    - name: Allow RDP through the firewall
+      community.general.ufw:
+        rule: allow
+        port: '3389'
+
     - name: Add Google Chrome repository key
       apt_key:
         url: https://dl.google.com/linux/linux_signing_key.pub
