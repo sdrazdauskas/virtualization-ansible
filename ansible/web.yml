@@ -21,3 +21,11 @@
     - name: Upgrade all packages 
       apt: 
         upgrade: dist
+
+    - community.general.ufw:
+        rule: allow
+        port: ssh
+
+    - name: Enable UFW
+      community.general.ufw:
+        state: enabled

@@ -45,3 +45,11 @@
       apt:
         name: google-chrome-stable
         state: present
+
+    - community.general.ufw:
+        rule: allow
+        port: ssh
+
+    - name: Enable UFW
+      community.general.ufw:
+        state: enabled
