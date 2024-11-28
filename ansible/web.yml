@@ -1,0 +1,23 @@
+---
+- name: Install chrome
+  hosts: web_server
+  become: yes
+  vars_files: 
+    - ../misc/vault.yml
+  vars:
+    ansible_become_pass: "{{ web_server_pass }}"
+
+  tasks:
+    - name: Ensure apt lists directory exists # Fails due lock if it doesn't exist
+      file:
+        path: /var/lib/apt/lists
+        state: directory
+        mode: '0755'
+
+    - name: Update apt repository cache
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages 
+      apt: 
+        upgrade: dist

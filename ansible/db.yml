@@ -21,13 +21,13 @@
       apt:
         update_cache: yes
 
-    - name: Upgrade all packages 
-      apt: 
+    - name: Upgrade all packages
+      apt:
         upgrade: dist
 
     - name: Install MySQL server
       apt:
-        name: 
+        name:
           - mysql-server
           - python3-pymysql
         state: present
@@ -45,12 +45,12 @@
         login_unix_socket: /var/run/mysqld/mysqld.sock
         state: present
 
-    - name: Create /root/.my.cnf file from template 
+    - name: Create /root/.my.cnf file from template
       template:
         src: ../misc/mysql-root.ini.j2
         dest: /root/.my.cnf
-        owner: root 
-        group: root 
+        owner: root
+        group: root
         mode: '0600'
 
     - name: Restart MySQL
@@ -69,22 +69,29 @@
         mysql -u root < {{ sql_remote_path }}
       args:
         executable: /bin/bash
-      ignore_errors: yes
+      ignore_errors: yes # incase the database already exists
 
-    - name: Create MySQL user 
+    - name: Create MySQL user
       mysql_user:
-        name: webuser 
-        password: "{{ db_web_pass }}" 
-        priv: 'hospital_db.*:ALL' 
+        name: webuser
+        password: "{{ db_web_pass }}"
+        priv: 'hospital_db.*:ALL'
         state: present
         login_user: root
         login_password: "{{ database_server_pass }}"
 
-    - name: Allow port 3306
-      ansible.builtin.command: 
-        cmd: sudo ufw allow 3306 
-      notify:
-      - Reload UFW
+    - name: Allow access to mysql port 3306
+      community.general.ufw:
+        rule: allow
+        port: '3306'
+
+    - community.general.ufw:
+        rule: allow
+        port: ssh
+
+    - name: Enable UFW
+      community.general.ufw:
+        state: enabled
 
     - name: Clean up SQL file from the target system
       file:
