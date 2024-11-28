@@ -1,5 +1,5 @@
 ---
-- name: Install chrome
+- name: Setup webserver
   hosts: web_server
   become: yes
   vars_files: 
