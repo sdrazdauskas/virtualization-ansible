@@ -26,6 +26,11 @@
         rule: allow
         port: ssh
 
+    - name: Allow access to django port 8000
+      community.general.ufw:
+        rule: allow
+        port: '8000'
+
     - name: Enable UFW
       community.general.ufw:
         state: enabled
