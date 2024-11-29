@@ -78,3 +78,9 @@
 
     - name: Build Docker image
       command: docker-compose -f /opt/hospital/docker-compose.yml up --build -d
+
+    - name: Create Django superuser 
+      command: docker-compose run web python manage.py createsuperuser --noinput --username admin --email admin@example.com 
+      environment: 
+        DJANGO_SUPERUSER_PASSWORD: "{{ web_server_pass }}"
+      when: create_superuser |
