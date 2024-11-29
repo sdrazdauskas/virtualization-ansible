@@ -136,7 +136,7 @@ echo "---" | sudo tee $VAULT_FILE
 
 # Call the function with the username and VM name parameters
 configure_vm $DB_USER $DB_VM_NAME "TCP_PORT_FORWARDING=\"22 3306\""
-configure_vm $WEBSERVER_USER $WEBSERVER_VM_NAME "TCP_PORT_FORWARDING=\"22 80 5000\""
+configure_vm $WEBSERVER_USER $WEBSERVER_VM_NAME "TCP_PORT_FORWARDING=\"22 8000\""
 configure_vm $CLIENT_USER $CLIENT_VM_NAME
 
 PASSWORD=$(openssl rand -base64 16 | head -c 16)
