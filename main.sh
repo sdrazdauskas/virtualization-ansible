@@ -18,7 +18,7 @@ mkdir -p "$(dirname "$VAULT_FILE")" # Create the vault directory if needed
 # Install required components
 echo "Installing required components..."
 sudo apt-get update
-sudo apt-get -y install gnupg wget apt-transport-https
+sudo apt-get -y install gnupg wget apt-transport-https python3-venv
 sudo apt install -y software-properties-common
 
 # Ansible
