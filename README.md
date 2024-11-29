@@ -8,4 +8,5 @@
 * Setup a ansible vault.
 * Run the ansible playbooks.
 * Setup database with mysql and create custom user for website
+* Creates hospital django website on docker container and connects to database
 * Install chrome on client VM and install rdp
