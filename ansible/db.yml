@@ -75,6 +75,7 @@
       mysql_user:
         name: webuser
         password: "{{ db_web_pass }}"
+        host: '%'
         priv: 'hospital_db.*:ALL'
         state: present
         login_user: root
