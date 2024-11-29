@@ -55,6 +55,11 @@
         name: python3-setuptools 
         state: present
 
+    - name: Install MySQL client 
+      apt: 
+        name: mysql-client 
+        state: present
+
     - name: Copy website files
       copy:
         src: ../hospital/
