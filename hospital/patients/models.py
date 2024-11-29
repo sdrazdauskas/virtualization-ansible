@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from patients.models import Patient
+from doctors.models import Doctor
 
 class Patient(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -8,12 +10,6 @@ class Patient(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
-
-class PatientCard(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="cards")
-    from django.db import models
-from patients.models import Patient
-from doctors.models import Doctor
 
 class PatientCard(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="cards")
