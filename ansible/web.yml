@@ -6,6 +6,7 @@
     - ../misc/vault.yml
   vars:
     ansible_become_pass: "{{ web_server_pass }}"
+    create_superuser: true
 
   tasks:
     - name: Ensure apt lists directory exists # Fails due lock if it doesn't exist
@@ -84,6 +85,6 @@
 
     - name: Create Django superuser 
       command: docker-compose run web python manage.py createsuperuser --noinput --username admin --email admin@example.com 
-      environment: 
+      environment:
         DJANGO_SUPERUSER_PASSWORD: "{{ web_server_pass }}"
-      when: create_superuser |
+      when: create_superuser is defined and create_superuser
