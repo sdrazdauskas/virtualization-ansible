@@ -76,6 +76,9 @@
         db_password: "{{ db_web_pass }}"
         db_ip: "{{ database_server_ip }}"
 
+    - name: Prune Docker system # incase we had the image running
+      command: docker system prune -a -f
+
     - name: Build Docker image
       command: docker-compose -f /opt/hospital/docker-compose.yml up --build -d
 
