@@ -80,6 +80,11 @@
     - name: Prune Docker system # incase we had the image running
       command: docker system prune -a -f
 
+    - name: Restart Docker service 
+      service: 
+        name: docker 
+        state: restarted
+
     - name: Build Docker image
       command: docker-compose -f /opt/hospital/docker-compose.yml up --build -d
 
