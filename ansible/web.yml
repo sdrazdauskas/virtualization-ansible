@@ -45,6 +45,11 @@
         name: docker-compose
         state: present
 
+    - name: Install python-venv
+      apt: 
+        name: python3-venv
+        state: present
+
     - name: Copy website files
       copy:
         src: ../hospital/
