@@ -49,8 +49,8 @@
       copy:
         src: ../hospital/
         dest: /opt/hospital/
-        owner: "{{ web_server_user }}"
-        group: "{{ web_server_user }}"
+        owner: root
+        group: root
         mode: '0755'
 
     - name: Template settings.py
