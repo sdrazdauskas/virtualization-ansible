@@ -85,7 +85,7 @@ DATABASES = {
         'NAME': 'hospital_db',
         'USER': 'webuser',
         'PASSWORD': 'b1KG2jpQsYAPdlPY',
-        'HOST': 'your_mysql_server_ip',  # IP address of the MySQL server
+        'HOST': '10.0.0.181',  # IP address of the MySQL server
         'PORT': '3306',  # Default MySQL port
     }
 }
