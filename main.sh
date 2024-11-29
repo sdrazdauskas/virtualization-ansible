@@ -116,6 +116,7 @@ configure_vm() {
     sshpass -p "$SSH_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -f $CUSER@$CSSH_PRIP
     if [ $? -eq 0 ]; then
       echo "${VM_NAME}_pass: $SSH_PASSWORD" | sudo tee -a $VAULT_FILE > /dev/null
+      echo "${VM_NAME}_ip: $CSSH_PRIP" | sudo tee -a $VAULT_FILE > /dev/null
       break
     else
       echo "Connection error. Retrying..."

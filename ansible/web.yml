@@ -34,3 +34,32 @@
     - name: Enable UFW
       community.general.ufw:
         state: enabled
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Install Docker Compose
+      apt:
+        name: docker-compose
+        state: present
+
+    - name: Copy website files
+      copy:
+        src: ../hospital/
+        dest: /opt/hospital/
+        owner: "{{ web_server_user }}"
+        group: "{{ web_server_user }}"
+        mode: '0755'
+
+    - name: Template settings.py
+      template:
+        src: misc/settings.py.j2
+        dest: /opt/hospital/hospital/settings.py
+      vars:
+        db_password: "{{ db_web_pass }}"
+        db_ip: "{{ database_server_ip }}"
+
+    - name: Build Docker image
+      command: docker-compose -f /opt/hospital/docker-compose.yml up --build -d
