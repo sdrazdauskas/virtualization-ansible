@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Patient Cards</h1>
+<ul>
+    {% for card in patient_cards %}
+        <li>
+            <h5>{{ card.patient.user.first_name }} {{ card.patient.user.last_name }}</h5>
+            <p>
+                <strong>Medical History:</strong> {{ card.medical_history }}<br>
+                <strong>Created At:</strong> {{ card.created_at }}
+            </p>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

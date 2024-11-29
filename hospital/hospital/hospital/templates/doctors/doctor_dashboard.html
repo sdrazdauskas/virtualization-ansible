@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Doctor Dashboard</h1>
+<div id="calendar"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var events = [
+            {% for appointment in appointments %}
+            {
+                title: '{{ appointment.patient.user.first_name }} {{ appointment.patient.user.last_name }}',
+                start: '{{ appointment.date|date:"Y-m-d" }}T{{ appointment.time|date:"H:i:s" }}',
+            },
+            {% endfor %}
+        ];
+        console.log(events); // Add this line to print the events array
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: events
+        });
+        calendar.render();
+    });
+</script>
+{% endblock %}

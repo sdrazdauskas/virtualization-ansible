@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Create Appointment</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create Appointment</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.querySelector('input[type="date"]');
+        dateInput.addEventListener('input', function() {
+            const date = new Date(this.value);
+            const day = date.getUTCDay();
+            if (day === 0 || day === 6) {  // 0 = Sunday, 6 = Saturday
+                alert('Weekends are not allowed. Please select a weekday.');
+                this.value = '';
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Doctors</h1>
+<form method="get">
+    <input type="text" name="name" placeholder="Search by name">
+    <select name="level">
+        <option value="">All Levels</option>
+        <option value="CARD">Cardiologist</option>
+        <option value="GP">General Practitioner</option>
+    </select>
+    <button type="submit">Search</button>
+    <button type="button" onclick="window.location.href='{% url 'doctor-list' %}'">Clear Search</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Specialization</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for doctor in doctors %}
+        <li>
+            <h5>{{ doctor.user.first_name }} {{ doctor.user.last_name }}</h5>
+            <p>
+                <strong>Specialization:</strong> {{ doctor.specialization }}<br>
+                <strong>Contact Number:</strong> {{ doctor.contact_number }}<br>
+                <strong>Work Schedule:</strong> {{ doctor.work_schedule }}
+            </p>
+        </li>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
