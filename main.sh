@@ -73,9 +73,9 @@ configure_vm() {
 
     # Instantiate VM with the specified template and optional arguments
     if [ -n "$RAW_ARG" ]; then
-      CVMREZ=$(onetemplate instantiate "ubuntu-24.04" --name "$VM_NAME" --user $CUSER --password $CPASS --endpoint $CENDPOINT --raw "$RAW_ARG")
+      CVMREZ=$(onetemplate instantiate 2732 --name "$VM_NAME" --user $CUSER --password $CPASS --endpoint $CENDPOINT --raw "$RAW_ARG")
     else
-      CVMREZ=$(onetemplate instantiate "ubuntu-24.04" --name "$VM_NAME" --user $CUSER --password $CPASS --endpoint $CENDPOINT)
+      CVMREZ=$(onetemplate instantiate 2732 --name "$VM_NAME" --user $CUSER --password $CPASS --endpoint $CENDPOINT)
     fi
 
     if [ -z "$CVMREZ" ]; then # Check if something went wrong, it automatically prints why
