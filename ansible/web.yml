@@ -55,7 +55,7 @@
 
     - name: Template settings.py
       template:
-        src: misc/settings.py.j2
+        src: ../misc/settings.py.j2
         dest: /opt/hospital/hospital/settings.py
       vars:
         db_password: "{{ db_web_pass }}"
