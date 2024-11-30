@@ -1,11 +1,11 @@
 USE hospital_db;
 
 -- Create Users
-INSERT INTO auth_user (username, password, first_name, last_name, email, is_staff, is_active, date_joined)
-VALUES ('doctor1', 'pbkdf2_sha256$260000$...$...', 'John', 'Doe', 'doctor1@example.com', 1, 1, NOW());
+INSERT INTO auth_user (username, password, first_name, last_name, email, is_staff, is_active, is_superuser, date_joined)
+VALUES ('doctor1', 'pbkdf2_sha256$260000$...$...', 'John', 'Doe', 'doctor1@example.com', 1, 1, 0, NOW());
 
-INSERT INTO auth_user (username, password, first_name, last_name, email, is_staff, is_active, date_joined)
-VALUES ('patient1', 'pbkdf2_sha256$260000$...$...', 'Jane', 'Smith', 'patient1@example.com', 0, 1, NOW());
+INSERT INTO auth_user (username, password, first_name, last_name, email, is_staff, is_active, is_superuser, date_joined)
+VALUES ('patient1', 'pbkdf2_sha256$260000$...$...', 'Jane', 'Smith', 'patient1@example.com', 0, 1, 0, NOW());
 
 -- Create Doctor
 INSERT INTO doctors_doctor (user_id, specialization, phone, work_schedule)
