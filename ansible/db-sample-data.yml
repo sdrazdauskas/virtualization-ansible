@@ -1,0 +1,30 @@
+---
+- name: Setup sample data in database
+  hosts: database_server
+  become: yes
+  vars_files: 
+    - ../misc/vault.yml
+  vars:
+    ansible_become_pass: "{{ database_server_pass }}"
+    sql_local_path: "../misc/db-sample-data.sql"
+    sql_remote_path: "/tmp/db-sample-data.sql"
+    ansible_python_interpreter: /usr/bin/python3
+
+  tasks:
+    - name: Copy SQL file to the managed node
+      copy:
+        src: "{{ sql_local_path }}"
+        dest: "{{ sql_remote_path }}"
+        mode: '0644'
+
+    - name: Load database schema and data from SQL file
+      shell: |
+        mysql -u root < {{ sql_remote_path }}
+      args:
+        executable: /bin/bash
+      ignore_errors: yes # incase the database already exists
+
+    - name: Clean up SQL file from the target system
+      file:
+        path: "{{ sql_remote_path }}"
+        state: absent
