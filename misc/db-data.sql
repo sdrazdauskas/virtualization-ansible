@@ -1,4 +1,5 @@
--- sample_data.sql
+CREATE DATABASE hospital_db;
+USE hospital_db;
 
 -- Create Users
 INSERT INTO auth_user (username, password, first_name, last_name, email, is_staff, is_active, date_joined)
