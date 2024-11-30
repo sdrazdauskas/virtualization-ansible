@@ -22,14 +22,12 @@
     </thead>
     <tbody>
         {% for doctor in doctors %}
-        <li>
-            <h5>{{ doctor.user.first_name }} {{ doctor.user.last_name }}</h5>
-            <p>
-                <strong>Specialization:</strong> {{ doctor.specialization }}<br>
-                <strong>Contact Number:</strong> {{ doctor.contact_number }}<br>
-                <strong>Work Schedule:</strong> {{ doctor.work_schedule }}
-            </p>
-        </li>
+        <tr>
+            <td>{{ doctor.user.first_name }} {{ doctor.user.last_name }}</td>
+            <td>{{ doctor.specialization }}</td>
+            <td>{{ doctor.phone }}</td>
+            <td>{{ doctor.work_schedule }}</td>
+        </tr>
         {% endfor %}
     </tbody>
 </table>
