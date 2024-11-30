@@ -93,5 +93,5 @@
       args: 
         chdir: /opt/hospital
       environment:
-        DJANGO_SUPERUSER_PASSWORD: "{{ web_server_pass }}"
+        DJANGO_SUPERUSER_PASSWORD: "{{ db_web_pass }}"
       when: create_superuser is defined and create_superuser
