@@ -10,3 +10,7 @@
 - name: Configure client
   import_playbook: client.yml
   become: yes
+
+- name: Add sample data to database
+  import_playbook: db-sample-data.yml
+  become: yes

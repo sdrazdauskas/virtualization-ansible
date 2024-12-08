@@ -126,7 +126,7 @@ configure_vm() {
 
   # Append VM name and private IP to Ansible hosts file
   echo "[$VM_NAME]" | sudo tee -a $ANSIBLE_HOSTS_FILE
-  echo "$CSSH_PRIP" | sudo tee -a $ANSIBLE_HOSTS_FILE
+  echo "$CSSH_PRIP ansible_user=$CUSER" | sudo tee -a $ANSIBLE_HOSTS_FILE
   echo ""           | sudo tee -a $ANSIBLE_HOSTS_FILE
   echo
 }
