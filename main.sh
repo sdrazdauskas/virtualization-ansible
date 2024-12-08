@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Define usernames and VM names
-DB_USER="sadr0144"
+DB_USER="vlku0123"
 WEBSERVER_USER="sadr0144"
 CLIENT_USER="sadr0144"
 DB_VM_NAME="database_server"
