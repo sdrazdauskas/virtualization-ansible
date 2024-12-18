@@ -4,10 +4,10 @@
 <h1>Appointment List</h1>
 <ul>
     {% for appointment in appointments %}
-        <li>{{ appointment.doctor }} - {{ appointment.patient }} - {{ appointment.date }} - {{ appointment.reason }}</li>
+        <li>{{ appointment.doctor }} - {{ appointment.patient }} - {{ appointment.date }} - {{ appointment.time }} - {{ appointment.reason }}</li>
     {% empty %}
         <li>No appointments available.</li>
     {% endfor %}
 </ul>
-<a href="{% url 'create-appointment' %}">Create a new appointment
+<a href="{% url 'create-appointment' %}">Create a new appointment</a>
 {% endblock %}
