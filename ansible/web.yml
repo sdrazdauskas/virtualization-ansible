@@ -62,7 +62,7 @@
 
     - name: Copy website files
       copy:
-        src: ../hospital/
+        src: ../web/hospital/
         dest: /opt/hospital/
         owner: root
         group: root
